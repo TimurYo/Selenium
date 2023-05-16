@@ -12,7 +12,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DebitCardTest {
-    WebDriver driver;
+    static WebDriver driver;
 
     @BeforeAll
     static void setupAll() {
@@ -20,25 +20,29 @@ public class DebitCardTest {
     }
 
     @BeforeEach
-    void setup() {
-        driver = new ChromeDriver();
+    public void setup() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--headless");
+        driver = new ChromeDriver(options);
+        driver.get("http://localhost:9999");
     }
 
     @AfterEach
-    void teardown() {
+    public void teardown() {
         driver.quit();
+        driver = null;
     }
 
     @Test
-    void validForm() {
-        driver.get("http://0.0.0.0:9999");
-        driver.findElement(By.id("[data-test-id= name]")).sendKeys("Джон Константин");
-        driver.findElement(By.id("[data-test-id= name]")).sendKeys("+79999999999");
-        driver.findElement(By.id("[data-test-id= agreement]")).click();
-        driver.findElement(By.id("buttom")).click();
-        String expected = " Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.";
-        String actual = driver.findElement(By.id("[data-test-id= order-success]")).getText();
-
+    public void validForm() {
+        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Джон Константин");
+        driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+79999999999");
+        driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
+        driver.findElement(By.cssSelector("button.button")).click();
+        String actual = driver.findElement(By.cssSelector("[data-test-id=order-success]")).getText().trim();
+        String expected = "Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.";
         assertEquals(expected,actual);
     }
 

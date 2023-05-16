@@ -1,1 +1,1 @@
-## Project Selenium 
+## Project Selenium [![Build status](https://ci.appveyor.com/api/projects/status/0c1qkpj7tll4pgkl?svg=true)](https://ci.appveyor.com/project/TimurYo/selenium)
